@@ -35,13 +35,12 @@ jobs:
         shell: python
         run: |
           import feedparser, re, pathlib, textwrap, html
-          FEED_URL = "https://medium.com/feed/@myclimatedefinition"  # already your handle
+          FEED_URL = "https://medium.com/feed/@myclimatedefinition"  # <-- your handle
           feed = feedparser.parse(FEED_URL)
           outdir = pathlib.Path("content/medium")
           outdir.mkdir(parents=True, exist_ok=True)
 
-          def slugify(t):
-              return re.sub(r'[^a-z0-9-]+','-', t.lower()).strip('-')
+          def slugify(t): return re.sub(r'[^a-z0-9-]+','-', t.lower()).strip('-')
 
           count = 0
           for e in feed.entries:
@@ -64,7 +63,6 @@ jobs:
           '''
               (outdir / f"{slug}.md").write_text(md, encoding="utf-8")
               count += 1
-
           print(f"Wrote {count} markdown posts to content/medium/")
 
       - name: Setup Hugo
@@ -76,6 +74,10 @@ jobs:
       - name: Build
         run: hugo --minify
 
+      # REQUIRED for Pages to deploy properly
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -84,6 +86,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
