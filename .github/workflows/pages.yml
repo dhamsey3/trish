@@ -2,10 +2,10 @@ name: Build & Deploy Hugo (Medium feed)
 
 on:
   push:
-    branches: [ "main" ]          # build on commits
+    branches: ["main", "master"]
   schedule:
-    - cron: "0 */6 * * *"         # build every 6 hours (UTC)
-  workflow_dispatch:               # allow manual runs from the UI
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -23,7 +23,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Fetch Medium feed -> data/medium.json (no third-party API needed)
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -32,32 +31,33 @@ jobs:
       - name: Install feedparser
         run: pip install feedparser
 
+      # IMPORTANT: keep indentation exactly as shown below
       - name: Fetch Medium feed
         run: |
-          python - << 'PY'
-import feedparser, json, pathlib
-FEED_URL = "https://medium.com/feed/@yourusername"  # <-- change this!
-feed = feedparser.parse(FEED_URL)
-items = []
-for e in feed.entries:
-    items.append({
-        "title": e.get("title"),
-        "link": e.get("link"),
-        "description": e.get("summary",""),
-        "pubDate": e.get("published",""),
-        "thumbnail": (e.get("media_thumbnail",[{}])[0].get("url")
-                      if e.get("media_thumbnail") else None)
-    })
-pathlib.Path("data").mkdir(exist_ok=True)
-with open("data/medium.json","w", encoding="utf-8") as f:
-    json.dump({"items": items}, f, ensure_ascii=False)
-print(f"Wrote {len(items)} items to data/medium.json")
-PY
+          python - <<'PY'
+          import feedparser, json, pathlib
+          FEED_URL = "https://medium.com/feed/@yourusername"  # <-- change this
+          feed = feedparser.parse(FEED_URL)
+          items = []
+          for e in feed.entries:
+              items.append({
+                  "title": e.get("title"),
+                  "link": e.get("link"),
+                  "description": e.get("summary",""),
+                  "pubDate": e.get("published",""),
+                  "thumbnail": (e.get("media_thumbnail",[{}])[0].get("url")
+                                if e.get("media_thumbnail") else None)
+              })
+          pathlib.Path("data").mkdir(exist_ok=True)
+          with open("data/medium.json","w", encoding="utf-8") as f:
+              json.dump({"items": items}, f, ensure_ascii=False)
+          print(f"Wrote {len(items)} items to data/medium.json")
+          PY
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: "0.126.1"   # or latest stable
+          hugo-version: "0.126.1"
           extended: true
 
       - name: Build
