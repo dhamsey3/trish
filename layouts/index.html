@@ -1,13 +1,20 @@
 {{ define "main" }}
-  <section class="intro">
-    <h1>{{ .Site.Params.heroTitle | default "Welcome to My Blog" }}</h1>
-    <p>{{ .Site.Params.heroText | default "I write about sustainability, climate, and everyday choices. Posts below are pulled from my Medium." }}</p>
-    <p><a class="btn" href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener">Follow on Medium →</a></p>
+  <!-- HERO / INTRO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>{{ .Site.Params.heroTitle | default "Climate & Everyday Choices" }}</h1>
+      <p class="hero-sub">
+        {{ .Site.Params.heroText | default "Stories, definitions, and experiments in sustainability — auto-synced from Medium." }}
+      </p>
+      <p>
+        <a class="btn btn-primary"
+           href="https://medium.com/@myclimatedefinition"
+           target="_blank" rel="noopener">Follow on Medium →</a>
+      </p>
+    </div>
   </section>
 
-  <hr>
-
-  <h2>Latest posts</h2>
+  <h2 class="section-title">Latest posts</h2>
 
   {{ $pages := where .Site.RegularPages "Section" "medium" }}
   {{ $paginator := .Paginate $pages 6 }}
@@ -15,7 +22,9 @@
   <div class="grid">
     {{ range $paginator.Pages }}
       <article class="card">
-        {{ with .Params.image }}<a href="{{ $.RelPermalink }}"><img class="card-img" src="{{ . }}" alt=""></a>{{ end }}
+        {{ with .Params.image }}
+          <a href="{{ $.RelPermalink }}"><img class="card-img" src="{{ . }}" alt=""></a>
+        {{ end }}
         <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
         <small>{{ .Date.Format "02 Jan 2006" }}</small>
         <p>{{ with .Params.summary }}{{ . }}{{ else }}{{ .Summary }}{{ end }}</p>
