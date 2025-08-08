@@ -7,51 +7,53 @@
         {{ .Site.Params.heroText | default "Stories, definitions, and experiments in sustainability — auto-synced from Medium." }}
       </p>
 
+      <!-- IMAGE SLIDER -->
+      {{ $slides := slice "img/slide1.png" "img/slide2.png" "img/slide3.png" "img/slide4.png" }}
+      <section class="slider" aria-label="Featured images">
+        <button class="slider-btn prev" aria-label="Previous slide">‹</button>
+
+        <div class="slider-viewport">
+          <div class="slider-track">
+            {{ range $i, $s := $slides }}
+              <div class="slide"><img src="{{ $s | relURL }}" alt="Slide {{ add $i 1 }}"></div>
+            {{ end }}
+          </div>
+        </div>
+
+        <button class="slider-btn next" aria-label="Next slide">›</button>
+
+        <div class="slider-dots" role="tablist" aria-label="Slide pagination">
+          {{ range $i, $_ := $slides }}
+            <button role="tab" aria-selected="{{ cond (eq $i 0) "true" "false" }}" aria-label="Go to slide {{ add $i 1 }}" data-slide="{{ $i }}"></button>
+          {{ end }}
+        </div>
+      </section>
+
       <!-- SOCIAL BAR -->
       <nav class="socials">
         {{ with .Site.Params.social.medium }}
           <a href="{{ . }}" target="_blank" rel="noopener" aria-label="Medium" class="icon">
-            <svg viewBox="0 0 1043.63 592.71" width="22" height="22" aria-hidden="true"><path d="M588.67 296.35c0 163.75-131.33 296.36-293.9 296.36S0 460.1 0 296.35 131.33 0 294.77 0s293.9 132.6 293.9 296.35zM872.89 296.35c0 154.35-65.66 279.58-146.64 279.58s-146.63-125.23-146.63-279.58S645.27 16.77 726.25 16.77s146.64 125.23 146.64 279.58zm170.74 0c0 141.64-23.41 256.43-52.27 256.43s-52.26-114.79-52.26-256.43S962.5 39.93 991.36 39.93s52.27 115.79 52.27 256.43z"/></svg>
+            <svg viewBox="0 0 1043.63 592.71" width="22" height="22"><path d="M588.67 296.35c0 163.75-131.33 296.36-293.9 296.36S0 460.1 0 296.35 131.33 0 294.77 0s293.9 132.6 293.9 296.35zM872.89 296.35c0 154.35-65.66 279.58-146.64 279.58s-146.63-125.23-146.63-279.58S645.27 16.77 726.25 16.77s146.64 125.23 146.64 279.58zm170.74 0c0 141.64-23.41 256.43-52.27 256.43s-52.26-114.79-52.26-256.43S962.5 39.93 991.36 39.93s52.27 115.79 52.27 256.43z"/></svg>
           </a>
         {{ end }}
         {{ with .Site.Params.social.twitter }}
           <a href="{{ . }}" target="_blank" rel="noopener" aria-label="Twitter/X" class="icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4.5 3h5.1l4.18 6.13L18.9 3H21l-6.6 9.1L21.5 21h-5.1l-4.36-6.43L8.6 21H6.5l6.73-9.28L4.5 3z"/></svg>
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M4.5 3h5.1l4.18 6.13L18.9 3H21l-6.6 9.1L21.5 21h-5.1l-4.36-6.43L8.6 21H6.5l6.73-9.28L4.5 3z"/></svg>
           </a>
         {{ end }}
         {{ with .Site.Params.social.linkedin }}
           <a href="{{ . }}" target="_blank" rel="noopener" aria-label="LinkedIn" class="icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6.94 8.5H3.56V21h3.38V8.5zM5.25 3a2.02 2.02 0 100 4.04 2.02 2.02 0 000-4.04zM20.44 21h-3.37v-6.5c0-1.55-.03-3.53-2.15-3.53-2.15 0-2.48 1.67-2.48 3.41V21h-3.37V8.5h3.23v1.71h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.17V21z"/></svg>
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6.94 8.5H3.56V21h3.38V8.5zM5.25 3a2.02 2.02 0 100 4.04 2.02 2.02 0 000-4.04zM20.44 21h-3.37v-6.5c0-1.55-.03-3.53-2.15-3.53-2.15 0-2.48 1.67-2.48 3.41V21h-3.37V8.5h3.23v1.71h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.17V21z"/></svg>
           </a>
         {{ end }}
         {{ with .Site.Params.social.email }}
           <a href="mailto:{{ . }}" aria-label="Email" class="icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8.24l7.4 6.3a1 1 0 001.2 0L20 8.24V18H4z"/></svg>
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8.24l7.4 6.3a1 1 0 001.2 0L20 8.24V18H4z"/></svg>
           </a>
         {{ end }}
       </nav>
 
       <p><a class="btn btn-primary" href="{{ .Site.Params.social.medium | default "https://medium.com" }}" target="_blank" rel="noopener">Follow on Medium →</a></p>
-    </div>
-  </section>
-
-  <!-- IMAGE SLIDER (under hero) -->
-  <section class="slider" aria-label="Featured images">
-    <button class="slider-btn prev" aria-label="Previous slide">‹</button>
-    <div class="slider-viewport">
-      <div class="slider-track">
-        <div class="slide"><img src="{{ "img/slide1.png" | relURL }}" alt="Slide 1"></div>
-        <div class="slide"><img src="{{ "img/slide2.png" | relURL }}" alt="Slide 2"></div>
-        <div class="slide"><img src="{{ "img/slide3.png" | relURL }}" alt="Slide 3"></div>
-        <div class="slide"><img src="{{ "img/slide4.png" | relURL }}" alt="Slide 4"></div>
-      </div>
-    </div>
-    <button class="slider-btn next" aria-label="Next slide">›</button>
-    <div class="slider-dots" role="tablist" aria-label="Slide pagination">
-      <button role="tab" aria-selected="true" aria-label="Go to slide 1" data-slide="0"></button>
-      <button role="tab" aria-label="Go to slide 2" data-slide="1"></button>
-      <button role="tab" aria-label="Go to slide 3" data-slide="2"></button>
-      <button role="tab" aria-label="Go to slide 4" data-slide="3"></button>
     </div>
   </section>
 
@@ -63,19 +65,18 @@
 
   <div class="hlist">
     {{ range $paginator.Pages }}
-      {{ $page := . }}
       <article class="hcard">
-        {{ with $page.Params.image }}
-          <a class="hcard-media" href="{{ $page.RelPermalink }}"><img src="{{ . }}" alt=""></a>
+        {{ with .Params.image }}
+          <a class="hcard-media" href="{{ .Permalink }}"><img src="{{ . }}" alt=""></a>
         {{ else }}
-          <a class="hcard-media placeholder" href="{{ $page.RelPermalink }}"><div></div></a>
+          <a class="hcard-media placeholder" href="{{ .Permalink }}"><div></div></a>
         {{ end }}
 
         <div class="hcard-body">
-          <h3 class="hcard-title"><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></h3>
-          <small class="hcard-meta">{{ $page.Date.Format "02 Jan 2006" }}</small>
-          <p class="hcard-text">{{ with $page.Params.summary }}{{ . }}{{ else }}{{ $page.Summary }}{{ end }}</p>
-          {{ with $page.Params.external_url }}
+          <h3 class="hcard-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+          <small class="hcard-meta">{{ .Date.Format "02 Jan 2006" }}</small>
+          <p class="hcard-text">{{ with .Params.summary }}{{ . }}{{ else }}{{ .Summary }}{{ end }}</p>
+          {{ with .Params.external_url }}
             <p><a class="btn" href="{{ . }}" target="_blank" rel="noopener nofollow">Read on Medium →</a></p>
           {{ end }}
         </div>
@@ -90,42 +91,4 @@
       {{ if $paginator.HasNext }}<a href="{{ $paginator.Next.URL }}">Older »</a>{{ end }}
     </nav>
   {{ end }}
-
-  <!-- Slider JS -->
-  <script>
-  (function () {
-    const slider = document.querySelector('.slider');
-    if (!slider) return;
-    const track = slider.querySelector('.slider-track');
-    const slides = Array.from(slider.querySelectorAll('.slide'));
-    const dots = Array.from(slider.querySelectorAll('.slider-dots button'));
-    const prev = slider.querySelector('.slider-btn.prev');
-    const next = slider.querySelector('.slider-btn.next');
-
-    let i = 0, n = slides.length, timer;
-
-    function go(idx) {
-      i = (idx + n) % n;
-      track.style.transform = `translateX(${-i * 100}%)`;
-      dots.forEach((d, k) => {
-        d.classList.toggle('active', k === i);
-        d.setAttribute('aria-selected', k === i ? 'true' : 'false');
-      });
-    }
-    function start() { stop(); timer = setInterval(() => go(i + 1), 5000); }
-    function stop() { if (timer) clearInterval(timer); }
-
-    prev.addEventListener('click', () => { go(i - 1); start(); });
-    next.addEventListener('click', () => { go(i + 1); start(); });
-    dots.forEach(d => d.addEventListener('click', () => { go(+d.dataset.slide); start(); }));
-
-    slider.addEventListener('mouseenter', stop);
-    slider.addEventListener('mouseleave', start);
-    window.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
-
-    track.style.width = (n * 100) + '%';
-    slides.forEach(s => s.style.width = (100 / n) + '%');
-    go(0); start();
-  })();
-  </script>
 {{ end }}
