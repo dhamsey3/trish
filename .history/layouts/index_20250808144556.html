@@ -7,28 +7,6 @@
         {{ .Site.Params.heroText | default "Stories, definitions, and experiments in sustainability — auto-synced from Medium." }}
       </p>
 
-      <!-- IMAGE SLIDER (PNG files in static/img/) -->
-      {{ $slides := slice "img/slide1.png" "img/slide2.png" "img/slide3.png" "img/slide4.png" }}
-      <section class="slider" aria-label="Featured images">
-        <button class="slider-btn prev" aria-label="Previous slide">‹</button>
-
-        <div class="slider-viewport">
-          <div class="slider-track">
-            {{ range $i, $s := $slides }}
-              <div class="slide"><img src="{{ $s | relURL }}" alt="Slide {{ add $i 1 }}"></div>
-            {{ end }}
-          </div>
-        </div>
-
-        <button class="slider-btn next" aria-label="Next slide">›</button>
-
-        <div class="slider-dots" role="tablist" aria-label="Slide pagination">
-          {{ range $i, $_ := $slides }}
-            <button role="tab" aria-selected="{{ cond (eq $i 0) "true" "false" }}" aria-label="Go to slide {{ add $i 1 }}" data-slide="{{ $i }}"></button>
-          {{ end }}
-        </div>
-      </section>
-
       <!-- SOCIAL BAR -->
       <nav class="socials">
         {{ with .Site.Params.social.medium }}
@@ -54,6 +32,26 @@
       </nav>
 
       <p><a class="btn btn-primary" href="{{ .Site.Params.social.medium | default "https://medium.com" }}" target="_blank" rel="noopener">Follow on Medium →</a></p>
+    </div>
+  </section>
+
+  <!-- IMAGE SLIDER (under hero) -->
+  <section class="slider" aria-label="Featured images">
+    <button class="slider-btn prev" aria-label="Previous slide">‹</button>
+    <div class="slider-viewport">
+      <div class="slider-track">
+        <div class="slide"><img src="{{ "img/slide1.jpg" | relURL }}" alt="Slide 1"></div>
+        <div class="slide"><img src="{{ "img/slide2.jpg" | relURL }}" alt="Slide 2"></div>
+        <div class="slide"><img src="{{ "img/slide3.jpg" | relURL }}" alt="Slide 3"></div>
+        <div class="slide"><img src="{{ "img/slide4.jpg" | relURL }}" alt="Slide 4"></div>
+      </div>
+    </div>
+    <button class="slider-btn next" aria-label="Next slide">›</button>
+    <div class="slider-dots" role="tablist" aria-label="Slide pagination">
+      <button role="tab" aria-selected="true" aria-label="Go to slide 1" data-slide="0"></button>
+      <button role="tab" aria-label="Go to slide 2" data-slide="1"></button>
+      <button role="tab" aria-label="Go to slide 3" data-slide="2"></button>
+      <button role="tab" aria-label="Go to slide 4" data-slide="3"></button>
     </div>
   </section>
 
@@ -95,40 +93,39 @@
 
   <!-- Slider JS -->
   <script>
-    (function () {
-      const slider = document.querySelector('.slider');
-      if (!slider) return;
-    
-      const track = slider.querySelector('.slider-track');
-      const slides = Array.from(slider.querySelectorAll('.slide'));
-      const dots = Array.from(slider.querySelectorAll('.slider-dots button'));
-      const prev = slider.querySelector('.slider-btn.prev');
-      const next = slider.querySelector('.slider-btn.next');
-    
-      let i = 0, n = slides.length, timer;
-    
-      function go(idx) {
-        i = (idx + n) % n;
-        track.style.transform = `translateX(${-i * 100}%)`;
-        dots.forEach((d, k) => {
-          d.classList.toggle('active', k === i);
-          d.setAttribute('aria-selected', k === i ? 'true' : 'false');
-        });
-      }
-    
-      function start() { stop(); timer = setInterval(() => go(i + 1), 5000); }
-      function stop() { if (timer) clearInterval(timer); }
-    
-      prev.addEventListener('click', () => { go(i - 1); start(); });
-      next.addEventListener('click', () => { go(i + 1); start(); });
-      dots.forEach(d => d.addEventListener('click', () => { go(+d.dataset.slide); start(); }));
-    
-      slider.addEventListener('mouseenter', stop);
-      slider.addEventListener('mouseleave', start);
-      window.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
-    
-      go(0); start();
-    })();
-    </script>
-    
+  (function () {
+    const slider = document.querySelector('.slider');
+    if (!slider) return;
+    const track = slider.querySelector('.slider-track');
+    const slides = Array.from(slider.querySelectorAll('.slide'));
+    const dots = Array.from(slider.querySelectorAll('.slider-dots button'));
+    const prev = slider.querySelector('.slider-btn.prev');
+    const next = slider.querySelector('.slider-btn.next');
+
+    let i = 0, n = slides.length, timer;
+
+    function go(idx) {
+      i = (idx + n) % n;
+      track.style.transform = `translateX(${-i * 100}%)`;
+      dots.forEach((d, k) => {
+        d.classList.toggle('active', k === i);
+        d.setAttribute('aria-selected', k === i ? 'true' : 'false');
+      });
+    }
+    function start() { stop(); timer = setInterval(() => go(i + 1), 5000); }
+    function stop() { if (timer) clearInterval(timer); }
+
+    prev.addEventListener('click', () => { go(i - 1); start(); });
+    next.addEventListener('click', () => { go(i + 1); start(); });
+    dots.forEach(d => d.addEventListener('click', () => { go(+d.dataset.slide); start(); }));
+
+    slider.addEventListener('mouseenter', stop);
+    slider.addEventListener('mouseleave', start);
+    window.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+
+    track.style.width = (n * 100) + '%';
+    slides.forEach(s => s.style.width = (100 / n) + '%');
+    go(0); start();
+  })();
+  </script>
 {{ end }}

@@ -48,6 +48,7 @@ p { margin: .25rem 0 .5rem; color: #333; }
 .icon svg { display: block; }
 
 /* Slider */
+.slider { position: relative; margin: .5rem 0 1.25rem; }
 .slider-viewport { overflow: hidden; border-radius: 14px; }
 .slider-track { display: flex; transition: transform .5s ease; }
 .slide { flex: 0 0 100%; }            /* 👈 one slide = full viewport width */

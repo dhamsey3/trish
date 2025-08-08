@@ -95,40 +95,40 @@
 
   <!-- Slider JS -->
   <script>
-    (function () {
-      const slider = document.querySelector('.slider');
-      if (!slider) return;
-    
-      const track = slider.querySelector('.slider-track');
-      const slides = Array.from(slider.querySelectorAll('.slide'));
-      const dots = Array.from(slider.querySelectorAll('.slider-dots button'));
-      const prev = slider.querySelector('.slider-btn.prev');
-      const next = slider.querySelector('.slider-btn.next');
-    
-      let i = 0, n = slides.length, timer;
-    
-      function go(idx) {
-        i = (idx + n) % n;
-        track.style.transform = `translateX(${-i * 100}%)`;
-        dots.forEach((d, k) => {
-          d.classList.toggle('active', k === i);
-          d.setAttribute('aria-selected', k === i ? 'true' : 'false');
-        });
-      }
-    
-      function start() { stop(); timer = setInterval(() => go(i + 1), 5000); }
-      function stop() { if (timer) clearInterval(timer); }
-    
-      prev.addEventListener('click', () => { go(i - 1); start(); });
-      next.addEventListener('click', () => { go(i + 1); start(); });
-      dots.forEach(d => d.addEventListener('click', () => { go(+d.dataset.slide); start(); }));
-    
-      slider.addEventListener('mouseenter', stop);
-      slider.addEventListener('mouseleave', start);
-      window.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
-    
-      go(0); start();
-    })();
-    </script>
-    
+  (function () {
+    const slider = document.querySelector('.slider');
+    if (!slider) return;
+    const track = slider.querySelector('.slider-track');
+    const slides = Array.from(slider.querySelectorAll('.slide'));
+    const dots = Array.from(slider.querySelectorAll('.slider-dots button'));
+    const prev = slider.querySelector('.slider-btn.prev');
+    const next = slider.querySelector('.slider-btn.next');
+
+    let i = 0, n = slides.length, timer;
+
+    function go(idx) {
+      i = (idx + n) % n;
+      track.style.transform = `translateX(${-i * 100}%)`;
+      dots.forEach((d, k) => {
+        d.classList.toggle('active', k === i);
+        d.setAttribute('aria-selected', k === i ? 'true' : 'false');
+      });
+    }
+    function start() { stop(); timer = setInterval(() => go(i + 1), 5000); }
+    function stop() { if (timer) clearInterval(timer); }
+
+    prev.addEventListener('click', () => { go(i - 1); start(); });
+    next.addEventListener('click', () => { go(i + 1); start(); });
+    dots.forEach(d => d.addEventListener('click', () => { go(+d.dataset.slide); start(); }));
+
+    slider.addEventListener('mouseenter', stop);
+    slider.addEventListener('mouseleave', start);
+    window.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+
+    track.style.width = (n * 100) + '%';
+    slides.forEach(s => s.style.width = (100 / n) + '%';
+    );
+    go(0); start();
+  })();
+  </script>
 {{ end }}
