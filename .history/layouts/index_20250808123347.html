@@ -1,5 +1,5 @@
 {{ define "main" }}
-  <!-- HERO / INTRO -->
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-inner">
       <h1>{{ .Site.Params.heroTitle | default "Climate & Everyday Choices" }}</h1>
@@ -7,25 +7,29 @@
         {{ .Site.Params.heroText | default "Stories, definitions, and experiments in sustainability — auto-synced from Medium." }}
       </p>
 
-      <!-- SOCIAL BAR (uses params.social.* if set) -->
+      <!-- SOCIAL BAR -->
       <nav class="socials">
         {{ with .Site.Params.social.medium }}
           <a href="{{ . }}" target="_blank" rel="noopener" aria-label="Medium" class="icon">
+            <!-- Medium SVG -->
             <svg viewBox="0 0 1043.63 592.71" width="22" height="22" aria-hidden="true"><path d="M588.67 296.35c0 163.75-131.33 296.36-293.9 296.36S0 460.1 0 296.35 131.33 0 294.77 0s293.9 132.6 293.9 296.35zM872.89 296.35c0 154.35-65.66 279.58-146.64 279.58s-146.63-125.23-146.63-279.58S645.27 16.77 726.25 16.77s146.64 125.23 146.64 279.58zm170.74 0c0 141.64-23.41 256.43-52.27 256.43s-52.26-114.79-52.26-256.43S962.5 39.93 991.36 39.93s52.27 115.79 52.27 256.43z"/></svg>
           </a>
         {{ end }}
         {{ with .Site.Params.social.twitter }}
           <a href="{{ . }}" target="_blank" rel="noopener" aria-label="Twitter/X" class="icon">
+            <!-- X/Twitter SVG -->
             <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4.5 3h5.1l4.18 6.13L18.9 3H21l-6.6 9.1L21.5 21h-5.1l-4.36-6.43L8.6 21H6.5l6.73-9.28L4.5 3z"/></svg>
           </a>
         {{ end }}
         {{ with .Site.Params.social.linkedin }}
           <a href="{{ . }}" target="_blank" rel="noopener" aria-label="LinkedIn" class="icon">
+            <!-- LinkedIn SVG -->
             <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6.94 8.5H3.56V21h3.38V8.5zM5.25 3a2.02 2.02 0 100 4.04 2.02 2.02 0 000-4.04zM20.44 21h-3.37v-6.5c0-1.55-.03-3.53-2.15-3.53-2.15 0-2.48 1.67-2.48 3.41V21h-3.37V8.5h3.23v1.71h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.17V21z"/></svg>
           </a>
         {{ end }}
         {{ with .Site.Params.social.email }}
           <a href="mailto:{{ . }}" aria-label="Email" class="icon">
+            <!-- Mail SVG -->
             <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8.24l7.4 6.3a1 1 0 001.2 0L20 8.24V18H4z"/></svg>
           </a>
         {{ end }}
@@ -39,7 +43,7 @@
 
   {{ $all := where .Site.RegularPages "Section" "medium" }}
   {{ $pages := sort $all "Date" "desc" }}
-  {{ $paginator := .Paginate $pages 3 }}  {{/* limit to 3 per page */}}
+  {{ $paginator := .Paginate $pages 3 }}  {{/* LIMIT: 3 per page */}}
 
   <div class="hlist">
     {{ range $paginator.Pages }}
