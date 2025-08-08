@@ -32,39 +32,40 @@ jobs:
         run: pip install feedparser
 
       - name: Generate Markdown posts from Medium feed
+        shell: python
         run: |
-          python - << 'PY'
-import feedparser, os, re, pathlib, textwrap, html
-FEED_URL = "https://medium.com/feed/@myclimatedefinition" 
-feed = feedparser.parse(FEED_URL)
-outdir = pathlib.Path("content/medium")
-outdir.mkdir(parents=True, exist_ok=True)
+          import feedparser, re, pathlib, textwrap, html
+          FEED_URL = "https://medium.com/feed/@myclimatedefinition"  # already your handle
+          feed = feedparser.parse(FEED_URL)
+          outdir = pathlib.Path("content/medium")
+          outdir.mkdir(parents=True, exist_ok=True)
 
-def slugify(t):
-    return re.sub(r'[^a-z0-9-]+','-', t.lower()).strip('-')
+          def slugify(t):
+              return re.sub(r'[^a-z0-9-]+','-', t.lower()).strip('-')
 
-for e in feed.entries:
-    title = e.get("title","Untitled")
-    link  = e.get("link","#")
-    date  = e.get("published","")
-    summ  = e.get("summary","")
-    body  = textwrap.shorten(html.unescape(re.sub("<.*?>","",summ)), 280)
-    slug  = slugify(title) or slugify(link)
-    md = f"""+++
-title = "{title.replace('"','\\"')}"
-date = "{date}"
-draft = false
-external_url = "{link}"
-+++
+          count = 0
+          for e in feed.entries:
+              title = e.get("title","Untitled")
+              link  = e.get("link","#")
+              date  = e.get("published","")
+              summ  = e.get("summary","")
+              body  = textwrap.shorten(html.unescape(re.sub("<.*?>","",summ)), 280)
+              slug  = slugify(title) or slugify(link)
+              md = f'''+++
+          title = "{title.replace('"','\\"')}"
+          date = "{date}"
+          draft = false
+          external_url = "{link}"
+          +++
 
-{body}
+          {body}
 
-[Read on Medium →]({link})
-"""
-    (outdir / f"{slug}.md").write_text(md, encoding="utf-8")
+          [Read on Medium →]({link})
+          '''
+              (outdir / f"{slug}.md").write_text(md, encoding="utf-8")
+              count += 1
 
-print(f"Wrote {len(feed.entries)} markdown posts to content/medium/")
-PY
+          print(f"Wrote {count} markdown posts to content/medium/")
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
