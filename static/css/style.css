@@ -43,3 +43,64 @@ p { margin: .25rem 0 .5rem; color: #333; }
 
 .intro { margin-bottom: 1.25rem; }
 .intro .btn { margin-top: .5rem; display: inline-block; }
+
+
+
+/* HERO */
+.hero {
+  position: relative;
+  border-radius: 16px;
+  padding: 3rem 1.25rem;
+  margin: 0 0 1.5rem;
+  background: radial-gradient(1200px 600px at 10% -10%, rgba(82,132,255,.18), transparent 60%),
+              radial-gradient(900px 900px at 100% 0%, rgba(108,230,180,.18), transparent 40%),
+              linear-gradient(180deg, #f6f8ff, #f9fbff);
+  /* Optional background image — uncomment if you add one to /static/img/hero.jpg
+  background-image: url("/trish/img/hero.jpg");
+  background-size: cover;
+  background-position: center;
+  */
+  box-shadow: 0 10px 24px rgba(0,0,0,.05);
+}
+
+.hero-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.hero h1 {
+  margin: 0 0 .5rem;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  line-height: 1.1;
+}
+
+.hero-sub {
+  color: #444;
+  max-width: 720px;
+  margin: .25rem 0 1rem;
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
+}
+
+/* Section title */
+.section-title {
+  margin: .5rem 0 1rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: .55rem .9rem;
+  border-radius: 10px;
+  border: 1px solid #dcdcdc;
+  text-decoration: none;
+  transition: transform .05s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-primary {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+/* Keep existing grid/card styles, or tweak if needed */
