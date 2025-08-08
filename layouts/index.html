@@ -1,0 +1,14 @@
+{{ define "main" }}
+  <h1>Latest posts</h1>
+  <div class="grid">
+    {{ range (where .Site.RegularPages "Section" "medium") }}
+      <article class="card">
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        {{ with .Summary }}<p>{{ . }}</p>{{ end }}
+        {{ with .Params.external_url }}
+          <p><a href="{{ . }}" target="_blank" rel="noopener">Read on Medium →</a></p>
+        {{ end }}
+      </article>
+    {{ end }}
+  </div>
+{{ end }}
