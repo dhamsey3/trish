@@ -1,14 +1,32 @@
 {{ define "main" }}
   <h1>Latest posts</h1>
+
+  {{ $pages := where .Site.RegularPages "Section" "medium" }}
+  {{ $paginator := .Paginate $pages 6 }}  {{/* 6 per page */}}
+
   <div class="grid">
-    {{ range (where .Site.RegularPages "Section" "medium") }}
+    {{ range $paginator.Pages }}
       <article class="card">
+        {{ with .Params.image }}
+          <a href="{{ $.RelPermalink }}">
+            <img class="card-img" src="{{ . }}" alt="">
+          </a>
+        {{ end }}
         <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-        {{ with .Summary }}<p>{{ . }}</p>{{ end }}
+        <small>{{ .Date.Format "02 Jan 2006" }}</small>
+        <p>{{ with .Params.summary }}{{ . }}{{ else }}{{ .Summary }}{{ end }}</p>
         {{ with .Params.external_url }}
-          <p><a href="{{ . }}" target="_blank" rel="noopener">Read on Medium →</a></p>
+          <p><a class="btn" href="{{ . }}" target="_blank" rel="noopener nofollow">Read on Medium →</a></p>
         {{ end }}
       </article>
     {{ end }}
   </div>
+
+  {{ if gt $paginator.TotalPages 1 }}
+    <nav class="pager">
+      {{ if $paginator.HasPrev }}<a href="{{ $paginator.Prev.URL }}">« Newer</a>{{ end }}
+      <span>Page {{ $paginator.PageNumber }} / {{ $paginator.TotalPages }}</span>
+      {{ if $paginator.HasNext }}<a href="{{ $paginator.Next.URL }}">Older »</a>{{ end }}
+    </nav>
+  {{ end }}
 {{ end }}
