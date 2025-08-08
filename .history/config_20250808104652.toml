@@ -1,0 +1,4 @@
+baseURL = "https://climatedefinition.github.io/<your-repo>/"
+languageCode = "en-us"
+title = "My Blog"
+

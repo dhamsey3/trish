@@ -1,0 +1,4 @@
+baseURL = "https://<your-user>.github.io/<your-repo>/"
+languageCode = "en-us"
+title = "My Blog"
+

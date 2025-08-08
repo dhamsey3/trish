@@ -1,0 +1,6 @@
++++
+title = "Blog"
++++
+
+## Latest from Medium
+{{< medium_list >}}

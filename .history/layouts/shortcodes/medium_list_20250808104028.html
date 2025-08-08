@@ -1,0 +1,16 @@
+{{ $data := .Site.Data.medium }}
+{{ with $data.items }}
+  <div class="grid">
+  {{ range first 8 . }}
+    <article class="card">
+      <h3><a href="{{ .link }}" target="_blank" rel="noopener">{{ .title }}</a></h3>
+      {{ with .thumbnail }}<img src="{{ . }}" alt="">{{ end }}
+      {{ with .pubDate }}<small>{{ . }}</small>{{ end }}
+      <p>{{ .description | plainify | truncate 180 }}</p>
+      <p><a href="{{ .link }}" target="_blank" rel="noopener">Read on Medium →</a></p>
+    </article>
+  {{ end }}
+  </div>
+{{ else }}
+  <p>No Medium articles found.</p>
+{{ end }}
