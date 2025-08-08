@@ -40,3 +40,6 @@ p { margin: .25rem 0 .5rem; color: #333; }
   margin: 1.5rem 0;
 }
 .pager a { text-decoration: none; }
+
+.intro { margin-bottom: 1.25rem; }
+.intro .btn { margin-top: .5rem; display: inline-block; }
