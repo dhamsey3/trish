@@ -2,3 +2,12 @@ baseURL = "https://dhamsey3.github.io/trish/"
 languageCode = "en-us"
 title = "My Blog"
 
+[params]
+heroTitle = "Climate & Everyday Choices"
+heroText  = "Stories, definitions, and experiments in sustainability — auto-synced from Medium."
+
+[params.social]
+medium   = "https://medium.com/@myclimatedefinition"
+twitter  = "https://twitter.com/yourhandle"
+linkedin = "https://www.linkedin.com/in/yourprofile/"
+email    = "you@example.com"
