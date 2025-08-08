@@ -126,8 +126,7 @@
     window.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
 
     track.style.width = (n * 100) + '%';
-    slides.forEach(s => s.style.width = (100 / n) + '%';
-    );
+    slides.forEach((s) => { s.style.width = (100 / n) + '%'; });
     go(0); start();
   })();
   </script>
