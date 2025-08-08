@@ -2,3 +2,4 @@ baseURL = "https://dhamsey3.github.io/trish/"
 languageCode = "en-us"
 title = "My Blog"
 
+disableKinds = ["RSS"]
