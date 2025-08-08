@@ -34,35 +34,70 @@ jobs:
       - name: Generate Markdown posts from Medium feed
         shell: python
         run: |
-          import feedparser, re, pathlib, textwrap, html
-          FEED_URL = "https://medium.com/feed/@myclimatedefinition"  # <-- your handle
+          import feedparser, re, pathlib, textwrap, html, time, datetime
+          FEED_URL = "https://medium.com/feed/@myclimatedefinition"  # your handle
           feed = feedparser.parse(FEED_URL)
           outdir = pathlib.Path("content/medium")
           outdir.mkdir(parents=True, exist_ok=True)
 
           def slugify(t): return re.sub(r'[^a-z0-9-]+','-', t.lower()).strip('-')
 
+          def to_iso(ts):
+            if not ts: return ""
+            try:
+              # feedparser struct_time -> ISO 8601
+              return datetime.datetime.fromtimestamp(time.mktime(ts), datetime.timezone.utc).isoformat()
+            except Exception:
+              return ""
+
+          def extract_image(entry):
+            # Try media_thumbnail
+            thumb = (entry.get("media_thumbnail",[{}])[0].get("url")
+                     if entry.get("media_thumbnail") else None)
+            if thumb: return thumb
+            # Try media_content
+            mc = entry.get("media_content",[{}])
+            if mc and mc[0].get("url"): return mc[0]["url"]
+            # Try first <img src="..."> in summary/content
+            html_blob = entry.get("summary","")
+            for c in entry.get("content", []):
+              html_blob += " " + c.get("value","")
+            m = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', html_blob, re.I)
+            return m.group(1) if m else None
+
           count = 0
           for e in feed.entries:
-              title = e.get("title","Untitled")
-              link  = e.get("link","#")
-              date  = e.get("published","")
-              summ  = e.get("summary","")
-              body  = textwrap.shorten(html.unescape(re.sub("<.*?>","",summ)), 280)
-              slug  = slugify(title) or slugify(link)
-              md = f'''+++
-          title = "{title.replace('"','\\"')}"
-          date = "{date}"
-          draft = false
-          external_url = "{link}"
-          +++
+            title = e.get("title","Untitled")
+            link  = e.get("link","#")
+            # prefer parsed time
+            iso_date = to_iso(e.get("published_parsed")) or e.get("published","")
+            # make a clean summary
+            raw = e.get("summary","")
+            clean = html.unescape(re.sub("<.*?>", "", raw))
+            summary = textwrap.shorten(clean, 220)
 
-          {body}
+            image = extract_image(e)
+            slug  = slugify(title) or slugify(link)
 
-          [Read on Medium →]({link})
-          '''
-              (outdir / f"{slug}.md").write_text(md, encoding="utf-8")
-              count += 1
+            # Front matter summary + image; body minimal (no link to avoid duplication)
+            front = [
+              '+++',
+              f'title = "{title.replace("\"","\\\"")}"',
+              f'date = "{iso_date}"',
+              'draft = false',
+              f'external_url = "{link}"',
+              f'summary = "{summary.replace("\"","\\\"")}"',
+            ]
+            if image:
+              front.append(f'image = "{image}"')
+            front.append('+++')
+
+            body = ""  # keep body empty; we’ll add the button in the template
+
+            md = "\n".join(front) + "\n\n" + body + "\n"
+            (outdir / f"{slug}.md").write_text(md, encoding="utf-8")
+            count += 1
+
           print(f"Wrote {count} markdown posts to content/medium/")
 
       - name: Setup Hugo
@@ -74,7 +109,7 @@ jobs:
       - name: Build
         run: hugo --minify
 
-      # REQUIRED for Pages to deploy properly
+      # Required for Pages deployments
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
