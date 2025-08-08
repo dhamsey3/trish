@@ -6,8 +6,9 @@
       <p class="hero-sub">
         {{ .Site.Params.heroText | default "Stories, definitions, and experiments in sustainability — auto-synced from Medium." }}
       </p>
+  
 
-      <!-- SOCIAL BAR -->
+      <!-- SOCIAL BAR (uses params.social.* if set) -->
       <nav class="socials">
         {{ with .Site.Params.social.medium }}
           <a href="{{ . }}" target="_blank" rel="noopener" aria-label="Medium" class="icon">
@@ -35,40 +36,21 @@
     </div>
   </section>
 
-  <!-- IMAGE SLIDER (under hero) -->
-  <section class="slider" aria-label="Featured images">
-    <button class="slider-btn prev" aria-label="Previous slide">‹</button>
-    <div class="slider-viewport">
-      <div class="slider-track">
-        <div class="slide"><img src="{{ "img/slide1.png" | relURL }}" alt="Slide 1"></div>
-        <div class="slide"><img src="{{ "img/slide2.png" | relURL }}" alt="Slide 2"></div>
-        <div class="slide"><img src="{{ "img/slide3.png" | relURL }}" alt="Slide 3"></div>
-        <div class="slide"><img src="{{ "img/slide4.png" | relURL }}" alt="Slide 4"></div>
-      </div>
-    </div>
-    <button class="slider-btn next" aria-label="Next slide">›</button>
-    <div class="slider-dots" role="tablist" aria-label="Slide pagination">
-      <button role="tab" aria-selected="true" aria-label="Go to slide 1" data-slide="0"></button>
-      <button role="tab" aria-label="Go to slide 2" data-slide="1"></button>
-      <button role="tab" aria-label="Go to slide 3" data-slide="2"></button>
-      <button role="tab" aria-label="Go to slide 4" data-slide="3"></button>
-    </div>
-  </section>
-
   <h2 class="section-title">Latest posts</h2>
 
   {{ $all := where .Site.RegularPages "Section" "medium" }}
   {{ $pages := sort $all "Date" "desc" }}
-  {{ $paginator := .Paginate $pages 3 }}
+  {{ $paginator := .Paginate $pages 3 }}  {{/* limit to 3 per page */}}
 
   <div class="hlist">
     {{ range $paginator.Pages }}
       <article class="hcard">
         {{ with .Params.image }}
-          <a class="hcard-media" href="{{ .RelPermalink }}"><img src="{{ . }}" alt=""></a>
+          <a class="hcard-media" href="{{ $.RelPermalink }}"><img src="{{ . }}" alt=""></a>
         {{ else }}
-          <a class="hcard-media placeholder" href="{{ .RelPermalink }}"><div></div></a>
+          <a class="hcard-media placeholder" href="{{ $.RelPermalink }}"><div></div></a>
         {{ end }}
+
         <div class="hcard-body">
           <h3 class="hcard-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
           <small class="hcard-meta">{{ .Date.Format "02 Jan 2006" }}</small>
@@ -88,42 +70,4 @@
       {{ if $paginator.HasNext }}<a href="{{ $paginator.Next.URL }}">Older »</a>{{ end }}
     </nav>
   {{ end }}
-
-  <!-- Slider JS -->
-  <script>
-  (function () {
-    const slider = document.querySelector('.slider');
-    if (!slider) return;
-    const track = slider.querySelector('.slider-track');
-    const slides = Array.from(slider.querySelectorAll('.slide'));
-    const dots = Array.from(slider.querySelectorAll('.slider-dots button'));
-    const prev = slider.querySelector('.slider-btn.prev');
-    const next = slider.querySelector('.slider-btn.next');
-
-    let i = 0, n = slides.length, timer;
-
-    function go(idx) {
-      i = (idx + n) % n;
-      track.style.transform = `translateX(${-i * 100}%)`;
-      dots.forEach((d, k) => {
-        d.classList.toggle('active', k === i);
-        d.setAttribute('aria-selected', k === i ? 'true' : 'false');
-      });
-    }
-    function start() { stop(); timer = setInterval(() => go(i + 1), 5000); }
-    function stop() { if (timer) clearInterval(timer); }
-
-    prev.addEventListener('click', () => { go(i - 1); start(); });
-    next.addEventListener('click', () => { go(i + 1); start(); });
-    dots.forEach(d => d.addEventListener('click', () => { go(+d.dataset.slide); start(); }));
-
-    slider.addEventListener('mouseenter', stop);
-    slider.addEventListener('mouseleave', start);
-    window.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
-
-    track.style.width = (n * 100) + '%';
-    slides.forEach(s => s.style.width = (100 / n) + '%');
-    go(0); start();
-  })();
-  </script>
 {{ end }}
