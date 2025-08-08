@@ -31,28 +31,40 @@ jobs:
       - name: Install feedparser
         run: pip install feedparser
 
-      # IMPORTANT: keep indentation exactly as shown below
-      - name: Fetch Medium feed
+      - name: Generate Markdown posts from Medium feed
         run: |
-          python - <<'PY'
-          import feedparser, json, pathlib
-          FEED_URL = "https://medium.com/feed/@myclimatedefinition"  # <-- change this
-          feed = feedparser.parse(FEED_URL)
-          items = []
-          for e in feed.entries:
-              items.append({
-                  "title": e.get("title"),
-                  "link": e.get("link"),
-                  "description": e.get("summary",""),
-                  "pubDate": e.get("published",""),
-                  "thumbnail": (e.get("media_thumbnail",[{}])[0].get("url")
-                                if e.get("media_thumbnail") else None)
-              })
-          pathlib.Path("data").mkdir(exist_ok=True)
-          with open("data/medium.json","w", encoding="utf-8") as f:
-              json.dump({"items": items}, f, ensure_ascii=False)
-          print(f"Wrote {len(items)} items to data/medium.json")
-          PY
+          python - << 'PY'
+import feedparser, os, re, pathlib, textwrap, html
+FEED_URL = "https://medium.com/feed/@myclimatedefinition" 
+feed = feedparser.parse(FEED_URL)
+outdir = pathlib.Path("content/medium")
+outdir.mkdir(parents=True, exist_ok=True)
+
+def slugify(t):
+    return re.sub(r'[^a-z0-9-]+','-', t.lower()).strip('-')
+
+for e in feed.entries:
+    title = e.get("title","Untitled")
+    link  = e.get("link","#")
+    date  = e.get("published","")
+    summ  = e.get("summary","")
+    body  = textwrap.shorten(html.unescape(re.sub("<.*?>","",summ)), 280)
+    slug  = slugify(title) or slugify(link)
+    md = f"""+++
+title = "{title.replace('"','\\"')}"
+date = "{date}"
+draft = false
+external_url = "{link}"
++++
+
+{body}
+
+[Read on Medium →]({link})
+"""
+    (outdir / f"{slug}.md").write_text(md, encoding="utf-8")
+
+print(f"Wrote {len(feed.entries)} markdown posts to content/medium/")
+PY
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
@@ -71,9 +83,6 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
